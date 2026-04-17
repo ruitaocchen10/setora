@@ -43,6 +43,8 @@ setora/
 - `--webpack` flag required in dev and build — `next-pwa` is incompatible with Next.js 16 Turbopack
 - Service worker disabled in dev; test PWA with `npm run build && npm start`
 - Test microphone access on iOS Safari early
+- **MVP is web-first.** Design and build for desktop browsers first; mobile responsiveness is a post-MVP concern.
+- **MVP instruments:** Voice, Guitar, Piano only.
 
 ---
 
