@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Colors — base */
-  --color-background: oklch(10% 0.01 260);
-  --color-foreground: oklch(90% 0 0);
+  /* Colors - base */
+  --color-background: oklch(11% 0.02 255);
+  --color-foreground: oklch(93% 0 0);
 
-  /* Colors — semantic */
-  --color-primary: oklch(60% 0.22 260); /* brand purple/indigo */
+  /* Colors - semantic */
+  --color-primary: oklch(60% 0.28 285); /* vivid violet */
   --color-primary-foreground: oklch(98% 0 0);
-  --color-surface: oklch(14% 0.01 260); /* dark card bg */
-  --color-surface-foreground: oklch(90% 0 0);
-  --color-muted: oklch(30% 0.01 260);
-  --color-muted-foreground: oklch(65% 0 0);
+  --color-surface: oklch(16% 0.02 255); /* dark card bg */
+  --color-surface-foreground: oklch(93% 0 0);
+  --color-muted: oklch(24% 0.02 255);
+  --color-muted-foreground: oklch(58% 0 0);
   --color-accent: oklch(70% 0.18 140); /* green for "good take" */
   --color-destructive: oklch(60% 0.22 25); /* red for errors */
-  --color-border: oklch(25% 0.01 260);
+  --color-border: oklch(21% 0.02 255);
 
   /* Radii */
   --radius-sm: 0.375rem;
@@ -30,4 +30,8 @@ body {
   background: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans), Arial, sans-serif;
+}
+
+a, button, [role="button"], [type="button"], [type="submit"] {
+  cursor: pointer;
 }
