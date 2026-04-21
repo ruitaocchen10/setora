@@ -1,6 +1,8 @@
 import { Mic } from "lucide-react";
 import { Sidebar } from "@/components/layout/Sidebar";
-import { ProjectRightPanel } from "@/components/project/ProjectRightPanel";
+import { InstructionsPanel } from "@/components/project/InstructionsPanel";
+import { ReferenceTracksPanel } from "@/components/project/ReferenceTracksPanel";
+import { ProjectMenu } from "@/components/project/ProjectMenu";
 import { mockProjects, mockSessions } from "@/lib/mock/data";
 
 function formatDate(iso: string) {
@@ -24,38 +26,30 @@ export default async function ProjectPage({
       <Sidebar />
 
       <main className="flex-1 flex flex-col overflow-hidden">
-        {/* Top bar */}
-        <div className="shrink-0 px-6 py-3 border-b border-border flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 min-w-0">
-            <div className="min-w-0">
-              <span className="font-semibold text-foreground">
-                {project.title}
-              </span>
-              <span className="ml-2 text-sm text-muted-foreground">
-                {project.artist}
-              </span>
-            </div>
-            <div className="flex gap-1.5 shrink-0">
-              {project.instruments.map((inst) => (
-                <span
-                  key={inst}
-                  className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary capitalize"
-                >
-                  {inst}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center gap-4 shrink-0 text-sm text-muted-foreground">
-            <span>{project.sessionCount} sessions</span>
-            <span>Last: {formatDate(project.lastPracticed)}</span>
-          </div>
-        </div>
-
         {/* Content area */}
         <div className="flex flex-1 overflow-hidden min-h-0">
           {/* Center */}
           <div className="flex-1 overflow-y-auto p-8">
+            {/* Project header */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-2">
+                <h1 className="text-3xl font-semibold text-foreground">
+                  {project.title}
+                </h1>
+                <ProjectMenu />
+              </div>
+              <div className="flex gap-1.5">
+                {project.instruments.map((inst) => (
+                  <span
+                    key={inst}
+                    className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary capitalize"
+                  >
+                    {inst}
+                  </span>
+                ))}
+              </div>
+            </div>
+
             {/* New session CTA */}
             <button className="w-full flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border p-10 mb-8 hover:border-primary/40 hover:bg-surface/50 transition-colors">
               <Mic className="size-8 text-muted-foreground" />
@@ -75,29 +69,23 @@ export default async function ProjectPage({
                 <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-3">
                   Past Sessions
                 </p>
-                <div>
+                <div className="flex flex-col gap-3">
                   {sessions.map((session) => (
                     <div
                       key={session.id}
-                      className="flex items-start gap-4 py-4 border-b border-border last:border-0"
+                      className="rounded-lg border border-border bg-surface px-4 py-3"
                     >
-                      <div className="shrink-0 w-16">
+                      <div className="flex items-center justify-between mb-1.5">
                         <p className="text-sm font-medium text-foreground">
                           {formatDate(session.date)}
                         </p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-xs text-muted-foreground">
                           {session.durationMin} min
                         </p>
                       </div>
-                      <p className="flex-1 text-sm text-muted-foreground line-clamp-2">
+                      <p className="text-sm text-muted-foreground line-clamp-2">
                         {session.feedbackPreview}
                       </p>
-                      <a
-                        href={`/projects/${project.id}/sessions/${session.id}`}
-                        className="shrink-0 text-sm text-primary hover:underline"
-                      >
-                        View →
-                      </a>
                     </div>
                   ))}
                 </div>
@@ -106,7 +94,10 @@ export default async function ProjectPage({
           </div>
 
           {/* Right panel */}
-          <ProjectRightPanel projectId={project.id} />
+          <div className="w-108 shrink-0 overflow-y-auto p-12 flex flex-col gap-8">
+            <InstructionsPanel />
+            <ReferenceTracksPanel />
+          </div>
         </div>
       </main>
     </div>

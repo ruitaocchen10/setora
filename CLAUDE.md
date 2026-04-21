@@ -53,3 +53,8 @@ setora/
 - **Reference track import:** YouTube URL → server-side audio extraction. YouTube ToS is a legal gray area; needs a cleaner solution before public launch.
 - **Analysis:** Distinguishes expression from error (jazz bends, blues notes are not mistakes). Prefer relative improvement over absolute scores.
 - **Async everywhere:** All AI pipeline work is queued. UI pattern: submit → loading state → notify when done.
+
+---
+
+## UI Conventions
+- No dividers between sections — use spacing and card borders for separation instead.
