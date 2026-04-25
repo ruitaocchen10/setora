@@ -16,7 +16,7 @@ import { mockUser, mockProjects } from "@/lib/mock/data";
 const recentProjects = mockProjects.slice(0, 3);
 
 const navItems = [
-  { label: "Home", icon: Home, href: "/" },
+  { label: "Home", icon: Home, href: "/app" },
   { label: "Projects", icon: FolderOpen, href: "/projects" },
   { label: "Profile", icon: User, href: "/profile" },
   { label: "Settings", icon: Settings, href: "/settings" },
