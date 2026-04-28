@@ -3,3 +3,6 @@
 
 # MCP configuration
 .mcp.json
+
+# SQL query log
+/sql/

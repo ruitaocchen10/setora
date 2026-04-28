@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { Sidebar } from "@/components/layout/Sidebar";
+import { UserSidebar } from "@/components/layout/UserSidebar";
 import { Card, CardContent } from "@/components/ui/Card";
 import { mockSessions, mockProjects, mockUser } from "@/lib/mock/data";
 
@@ -24,7 +24,7 @@ const today = new Date().toLocaleDateString("en-US", {
 export default function Home() {
   return (
     <div className="flex h-screen bg-background text-foreground">
-      <Sidebar />
+      <UserSidebar />
 
       <main className="flex-1 overflow-y-auto p-10">
         {/* Greeting */}

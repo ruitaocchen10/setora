@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Home,
   FolderOpen,
@@ -10,8 +10,10 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  LogOut,
 } from "lucide-react";
-import { mockUser, mockProjects } from "@/lib/mock/data";
+import { mockProjects } from "@/lib/mock/data";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 const recentProjects = mockProjects.slice(0, 3);
 
@@ -22,11 +24,22 @@ const navItems = [
   { label: "Settings", icon: Settings, href: "/settings" },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  user: { name: string | null; email: string | null };
+}
+
+export function Sidebar({ user }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const supabase = createSupabaseBrowserClient();
 
-  const initials = mockUser.name.charAt(0).toUpperCase();
+  const initials = user.name ? user.name.charAt(0).toUpperCase() : "?";
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    router.push("/");
+  }
 
   return (
     <aside
@@ -118,22 +131,30 @@ export function Sidebar() {
       {/* Bottom: User info */}
       <div
         className={`p-4 flex items-center gap-3 ${
-          collapsed ? "justify-center" : ""
+          collapsed ? "flex-col" : ""
         }`}
       >
         <div className="size-8 rounded-full bg-primary/20 text-primary flex items-center justify-center text-sm font-semibold shrink-0">
           {initials}
         </div>
         {!collapsed && (
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-foreground truncate">
-              {mockUser.name}
+              {user.name ?? "—"}
             </p>
             <p className="text-xs text-muted-foreground truncate">
-              {mockUser.email}
+              {user.email ?? "—"}
             </p>
           </div>
         )}
+        <button
+          onClick={handleSignOut}
+          title="Sign out"
+          className="p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-white/5 transition-colors cursor-pointer shrink-0"
+          aria-label="Sign out"
+        >
+          <LogOut className="size-4" />
+        </button>
       </div>
     </aside>
   );

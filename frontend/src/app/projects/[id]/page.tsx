@@ -1,5 +1,5 @@
 import { Mic } from "lucide-react";
-import { Sidebar } from "@/components/layout/Sidebar";
+import { UserSidebar } from "@/components/layout/UserSidebar";
 import { InstructionsPanel } from "@/components/project/InstructionsPanel";
 import { ReferenceTracksPanel } from "@/components/project/ReferenceTracksPanel";
 import { ProjectMenu } from "@/components/project/ProjectMenu";
@@ -23,7 +23,7 @@ export default async function ProjectPage({
 
   return (
     <div className="flex h-screen bg-background text-foreground">
-      <Sidebar />
+      <UserSidebar />
 
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Content area */}
