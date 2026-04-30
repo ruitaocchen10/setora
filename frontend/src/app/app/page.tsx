@@ -1,6 +1,6 @@
-import { Plus } from "lucide-react";
 import { UserSidebar } from "@/components/layout/UserSidebar";
 import { Card, CardContent } from "@/components/ui/Card";
+import { NewProjectButton } from "@/components/project/NewProjectButton";
 import { createSupabaseSessionClient } from "@/lib/supabase/server";
 
 function formatDate(iso: string) {
@@ -72,10 +72,7 @@ export default async function Home() {
                 Pick a song, set your goals, and get coaching after every practice session.
               </p>
             </div>
-            <button className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer">
-              <Plus className="size-4" />
-              New project
-            </button>
+            <NewProjectButton variant="button" />
           </div>
         ) : (
         <section>
@@ -138,10 +135,7 @@ export default async function Home() {
             })}
 
             {/* New Project CTA */}
-            <button className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-transparent text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors cursor-pointer">
-              <Plus className="size-5" />
-              <span className="text-sm font-medium">New project</span>
-            </button>
+            <NewProjectButton variant="card" />
           </div>
         </section>
         )}
