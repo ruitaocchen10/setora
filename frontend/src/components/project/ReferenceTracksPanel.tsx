@@ -2,21 +2,36 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Plus, Music, X } from "lucide-react";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import type { ReferenceTrack } from "@/lib/types";
 
-const initialTracks = [
-  { id: "t1", name: "Blackbird — Beatles (Original)", source: "YouTube" },
-  { id: "t2", name: "Blackbird — Tommy Emmanuel", source: "YouTube" },
-];
+type TrackItem = Pick<ReferenceTrack, "id" | "song_name" | "artist" | "source_url">;
 
-export function ReferenceTracksPanel() {
+interface ReferenceTracksPanelProps {
+  projectId: string;
+  initialTracks: TrackItem[];
+}
+
+export function ReferenceTracksPanel({ projectId: _projectId, initialTracks }: ReferenceTracksPanelProps) {
   const [open, setOpen] = useState(true);
   const [tracks, setTracks] = useState(initialTracks);
+
+  async function handleDelete(trackId: string) {
+    const supabase = createSupabaseBrowserClient();
+    const { error } = await supabase
+      .from("reference_tracks")
+      .delete()
+      .eq("id", trackId);
+    if (!error) {
+      setTracks((prev) => prev.filter((t) => t.id !== trackId));
+    }
+  }
 
   return (
     <div className="rounded-lg border border-border bg-surface">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-foreground hover:text-foreground/80 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-foreground hover:text-foreground/80 transition-colors cursor-pointer"
       >
         <span>Reference Tracks</span>
         <div className="flex items-center gap-1.5 text-muted-foreground">
@@ -37,12 +52,16 @@ export function ReferenceTracksPanel() {
               >
                 <Music className="size-3.5 text-muted-foreground shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-foreground truncate">{track.name}</p>
-                  <p className="text-xs text-muted-foreground">{track.source}</p>
+                  <p className="text-sm text-foreground truncate">
+                    {track.song_name ?? "Untitled track"}
+                  </p>
+                  {track.artist && (
+                    <p className="text-xs text-muted-foreground">{track.artist}</p>
+                  )}
                 </div>
                 <button
-                  onClick={() => setTracks(tracks.filter((t) => t.id !== track.id))}
-                  className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={() => handleDelete(track.id)}
+                  className="shrink-0 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   <X className="size-3.5" />
                 </button>

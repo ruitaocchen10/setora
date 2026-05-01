@@ -1,9 +1,10 @@
+import { notFound } from "next/navigation";
 import { Mic } from "lucide-react";
 import { UserSidebar } from "@/components/layout/UserSidebar";
 import { InstructionsPanel } from "@/components/project/InstructionsPanel";
 import { ReferenceTracksPanel } from "@/components/project/ReferenceTracksPanel";
 import { ProjectMenu } from "@/components/project/ProjectMenu";
-import { mockProjects, mockSessions } from "@/lib/mock/data";
+import { createSupabaseSessionClient } from "@/lib/supabase/server";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -18,8 +19,23 @@ export default async function ProjectPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const project = mockProjects.find((p) => p.id === id) ?? mockProjects[0];
-  const sessions = mockSessions.filter((s) => s.projectId === project.id);
+  const supabase = await createSupabaseSessionClient();
+
+  const { data: project } = await supabase
+    .from("projects")
+    .select("*, sessions(id, created_at), reference_tracks(id, song_name, artist, source_url)")
+    .eq("id", id)
+    .single();
+
+  if (!project) notFound();
+
+  const sessions = (project.sessions ?? []) as { id: string; created_at: string }[];
+  const referenceTracks = (project.reference_tracks ?? []) as {
+    id: string;
+    song_name: string | null;
+    artist: string | null;
+    source_url: string | null;
+  }[];
 
   return (
     <div className="flex h-screen bg-background text-foreground">
@@ -36,10 +52,10 @@ export default async function ProjectPage({
                 <h1 className="text-3xl font-semibold text-foreground">
                   {project.title}
                 </h1>
-                <ProjectMenu />
+                <ProjectMenu projectId={project.id} />
               </div>
-              <div className="flex gap-1.5">
-                {project.instruments.map((inst) => (
+              <div className="flex gap-1.5 flex-wrap">
+                {project.instruments.map((inst: string) => (
                   <span
                     key={inst}
                     className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary capitalize"
@@ -51,7 +67,7 @@ export default async function ProjectPage({
             </div>
 
             {/* New session CTA */}
-            <button className="w-full flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border p-10 mb-8 hover:border-primary/40 hover:bg-surface/50 transition-colors">
+            <button className="w-full flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border p-10 mb-8 hover:border-primary/40 hover:bg-surface/50 transition-colors cursor-pointer">
               <Mic className="size-8 text-muted-foreground" />
               <div className="text-center">
                 <p className="text-base font-medium text-foreground">
@@ -75,16 +91,8 @@ export default async function ProjectPage({
                       key={session.id}
                       className="rounded-lg border border-border bg-surface px-4 py-3"
                     >
-                      <div className="flex items-center justify-between mb-1.5">
-                        <p className="text-sm font-medium text-foreground">
-                          {formatDate(session.date)}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {session.durationMin} min
-                        </p>
-                      </div>
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {session.feedbackPreview}
+                      <p className="text-sm font-medium text-foreground">
+                        {formatDate(session.created_at)}
                       </p>
                     </div>
                   ))}
@@ -95,8 +103,14 @@ export default async function ProjectPage({
 
           {/* Right panel */}
           <div className="w-108 shrink-0 overflow-y-auto p-12 flex flex-col gap-8">
-            <InstructionsPanel />
-            <ReferenceTracksPanel />
+            <InstructionsPanel
+              projectId={project.id}
+              initialInstructions={project.instructions}
+            />
+            <ReferenceTracksPanel
+              projectId={project.id}
+              initialTracks={referenceTracks}
+            />
           </div>
         </div>
       </main>

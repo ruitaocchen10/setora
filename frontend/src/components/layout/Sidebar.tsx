@@ -12,10 +12,7 @@ import {
   ChevronRight,
   LogOut,
 } from "lucide-react";
-import { mockProjects } from "@/lib/mock/data";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-
-const recentProjects = mockProjects.slice(0, 3);
 
 const navItems = [
   { label: "Home", icon: Home, href: "/app" },
@@ -24,11 +21,18 @@ const navItems = [
   { label: "Settings", icon: Settings, href: "/settings" },
 ];
 
-interface SidebarProps {
-  user: { name: string | null; email: string | null };
+interface RecentProject {
+  id: string;
+  title: string;
+  artist: string | null;
 }
 
-export function Sidebar({ user }: SidebarProps) {
+interface SidebarProps {
+  user: { name: string | null; email: string | null };
+  recentProjects: RecentProject[];
+}
+
+export function Sidebar({ user, recentProjects }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -110,7 +114,7 @@ export function Sidebar({ user }: SidebarProps) {
             <Link
               key={project.id}
               href={`/projects/${project.id}`}
-              title={collapsed ? `${project.title} — ${project.artist}` : undefined}
+              title={collapsed ? (project.artist ? `${project.title} — ${project.artist}` : project.title) : undefined}
               className={`flex items-center py-2 mx-2 rounded-full transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-white/5
                 ${collapsed ? "justify-center px-3" : "px-3"}
               `}
@@ -120,7 +124,9 @@ export function Sidebar({ user }: SidebarProps) {
               ) : (
                 <span className="text-sm whitespace-nowrap overflow-hidden text-ellipsis">
                   {project.title}
-                  <span className="text-muted-foreground/60"> — {project.artist}</span>
+                  {project.artist && (
+                    <span className="text-muted-foreground/60"> — {project.artist}</span>
+                  )}
                 </span>
               )}
             </Link>
