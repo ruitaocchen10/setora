@@ -6,3 +6,6 @@
 
 # SQL query log
 /sql/
+
+# Backend env
+backend/.env
