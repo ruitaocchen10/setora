@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ChevronLeft, Music } from "lucide-react";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { Message } from "@/lib/types";
 import { ChatInput } from "./ChatInput";
 
@@ -131,36 +130,59 @@ export function SessionChat({
     if (!text && !audioFile) return;
     setSending(true);
 
-    const feedbackData: FeedbackData | null = audioFile
-      ? { audio_filename: audioFile.name }
-      : null;
-
-    const tempMessage: Message = {
-      id: `temp-${Date.now()}`,
-      session_id: sessionId,
-      role: "user",
-      content: text,
-      recording_id: null,
-      feedback_data: feedbackData,
-      created_at: new Date().toISOString(),
-    };
-    setMessages((prev) => [...prev, tempMessage]);
-
-    const supabase = createSupabaseBrowserClient();
-    const { data: saved } = await supabase
-      .from("messages")
-      .insert({
+    // Optimistic user message
+    const tempId = `temp-${Date.now()}`;
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: tempId,
         session_id: sessionId,
         role: "user",
         content: text,
-        feedback_data: feedbackData,
-      })
-      .select()
-      .single();
+        recording_id: null,
+        feedback_data: null,
+        created_at: new Date().toISOString(),
+      },
+    ]);
 
-    if (saved) {
+    // Streaming assistant placeholder
+    const assistantId = `streaming-${Date.now()}`;
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: assistantId,
+        session_id: sessionId,
+        role: "assistant",
+        content: "",
+        recording_id: null,
+        feedback_data: null,
+        created_at: new Date().toISOString(),
+      },
+    ]);
+
+    const res = await fetch("/api/sessions/message", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId, content: text }),
+    });
+
+    if (!res.ok || !res.body) {
+      setMessages((prev) => prev.filter((m) => m.id !== assistantId));
+      setSending(false);
+      return;
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
       setMessages((prev) =>
-        prev.map((m) => (m.id === tempMessage.id ? (saved as Message) : m))
+        prev.map((m) =>
+          m.id === assistantId ? { ...m, content: m.content + chunk } : m
+        )
       );
     }
 
