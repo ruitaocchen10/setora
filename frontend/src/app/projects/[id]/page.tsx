@@ -1,17 +1,12 @@
 import { notFound } from "next/navigation";
-import { Mic } from "lucide-react";
 import { UserSidebar } from "@/components/layout/UserSidebar";
 import { InstructionsPanel } from "@/components/project/InstructionsPanel";
 import { ReferenceTracksPanel } from "@/components/project/ReferenceTracksPanel";
 import { ProjectMenu } from "@/components/project/ProjectMenu";
+import { NewSessionButton } from "@/components/session/NewSessionButton";
+import { SessionList } from "@/components/session/SessionList";
 import { createSupabaseSessionClient } from "@/lib/supabase/server";
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-}
 
 export default async function ProjectPage({
   params,
@@ -67,38 +62,10 @@ export default async function ProjectPage({
             </div>
 
             {/* New session CTA */}
-            <button className="w-full flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border p-10 mb-8 hover:border-primary/40 hover:bg-surface/50 transition-colors cursor-pointer">
-              <Mic className="size-8 text-muted-foreground" />
-              <div className="text-center">
-                <p className="text-base font-medium text-foreground">
-                  Start a new session
-                </p>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                  Record or upload to get AI feedback
-                </p>
-              </div>
-            </button>
+            <NewSessionButton projectId={project.id} />
 
             {/* Past sessions */}
-            {sessions.length > 0 && (
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-3">
-                  Past Sessions
-                </p>
-                <div className="flex flex-col gap-3">
-                  {sessions.map((session) => (
-                    <div
-                      key={session.id}
-                      className="rounded-lg border border-border bg-surface px-4 py-3"
-                    >
-                      <p className="text-sm font-medium text-foreground">
-                        {formatDate(session.created_at)}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <SessionList initialSessions={sessions} />
           </div>
 
           {/* Right panel */}
