@@ -1,6 +1,9 @@
 # docs
 /docs
 
+# Brand assets
+/assets
+
 # MCP configuration
 .mcp.json
 

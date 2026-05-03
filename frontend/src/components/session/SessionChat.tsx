@@ -192,6 +192,7 @@ export function SessionChat({
         session_id: sessionId,
         content: text,
         ...(recordingId ? { recording_id: recordingId } : {}),
+        ...(audioFile ? { audio_filename: audioFile.name } : {}),
       }),
     });
 
