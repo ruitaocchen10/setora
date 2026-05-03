@@ -130,6 +130,29 @@ export function SessionChat({
     if (!text && !audioFile) return;
     setSending(true);
 
+    // Upload audio to S3 first if present
+    let recordingId: string | null = null;
+    if (audioFile) {
+      const urlRes = await fetch("/api/recordings/upload-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: sessionId,
+          file_name: audioFile.name,
+          content_type: audioFile.type || "audio/webm",
+        }),
+      });
+      if (urlRes.ok) {
+        const { upload_url, recording_id } = await urlRes.json();
+        await fetch(upload_url, {
+          method: "PUT",
+          headers: { "Content-Type": audioFile.type || "audio/webm" },
+          body: audioFile,
+        });
+        recordingId = recording_id;
+      }
+    }
+
     // Optimistic user message
     const tempId = `temp-${Date.now()}`;
     setMessages((prev) => [
@@ -139,8 +162,10 @@ export function SessionChat({
         session_id: sessionId,
         role: "user",
         content: text,
-        recording_id: null,
-        feedback_data: null,
+        recording_id: recordingId,
+        feedback_data: audioFile
+          ? { audio_filename: audioFile.name }
+          : null,
         created_at: new Date().toISOString(),
       },
     ]);
@@ -163,7 +188,11 @@ export function SessionChat({
     const res = await fetch("/api/sessions/message", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ session_id: sessionId, content: text }),
+      body: JSON.stringify({
+        session_id: sessionId,
+        content: text,
+        ...(recordingId ? { recording_id: recordingId } : {}),
+      }),
     });
 
     if (!res.ok || !res.body) {

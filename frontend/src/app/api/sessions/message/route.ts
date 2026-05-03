@@ -12,8 +12,8 @@ export async function POST(request: Request) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json().catch(() => null);
-  const { session_id, content } = body ?? {};
-  if (!session_id || !content) {
+  const { session_id, content, recording_id } = body ?? {};
+  if (!session_id || (!content && !recording_id)) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
@@ -22,7 +22,8 @@ export async function POST(request: Request) {
   await supabase.from("messages").insert({
     session_id,
     role: "user",
-    content,
+    content: content ?? "",
+    ...(recording_id ? { recording_id } : {}),
   });
 
   const [{ data: session }, { data: messages }, { data: profile }] =
