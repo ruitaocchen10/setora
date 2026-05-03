@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -54,9 +55,12 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
       {/* Top: Logo + toggle */}
       <div className={`flex items-center py-5 px-4 ${collapsed ? "justify-center" : "justify-between"}`}>
         {!collapsed && (
-          <span className="text-lg font-semibold text-foreground tracking-tight">
-            Setora
-          </span>
+          <div className="flex items-center gap-2">
+            <Image src="/logo.png" alt="" width={602} height={602} className="size-6" />
+            <span className="text-lg font-semibold text-foreground tracking-tight">
+              Setora
+            </span>
+          </div>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}

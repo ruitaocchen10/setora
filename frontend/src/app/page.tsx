@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Play } from "lucide-react";
 import { WaitlistForm } from "@/components/landing/WaitlistForm";
@@ -46,7 +47,18 @@ export default function LandingPage() {
               "0 0 0 1px oklch(100% 0 0 / 0.08), 0 4px 24px oklch(0% 0 0 / 0.35), inset 0 1px 0 oklch(100% 0 0 / 0.06)",
           }}
         >
-          <span className="text-lg font-extrabold tracking-tight">Setora</span>
+          <div className="flex items-center gap-2">
+            <Image
+              src="/logo.png"
+              alt="Setora logo"
+              width={602}
+              height={602}
+              className="size-6 -translate-y-0.5"
+            />
+            <span className="text-xl font-extrabold tracking-tight">
+              Setora
+            </span>
+          </div>
           <Button
             variant="ghost"
             size="sm"
