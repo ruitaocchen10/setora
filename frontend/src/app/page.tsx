@@ -103,28 +103,29 @@ export default function LandingPage() {
 
       {/* Demo video */}
       <section className="px-4 pb-16">
-        <div className="relative max-w-6xl mx-auto">
+        <div className="relative max-w-6xl mx-auto group">
           {/* Violet underglow */}
           <div
             className="pointer-events-none absolute inset-x-1/4 top-4 h-32 blur-3xl -z-10"
             style={{ background: "oklch(60% 0.28 285 / 0.15)" }}
           />
+          {/* Underglow hover intensifier */}
+          <div
+            className="pointer-events-none absolute inset-x-1/4 top-4 h-32 blur-3xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            style={{ background: "oklch(60% 0.28 285 / 0.22)" }}
+          />
 
           {/* Video container — swap the placeholder div for an <iframe> or <video> when ready */}
           <div
-            className="w-full aspect-video rounded-2xl flex items-center justify-center"
-            style={{
-              background: "oklch(14% 0.02 255 / 0.85)",
-              boxShadow:
-                "0 0 0 1px oklch(100% 0 0 / 0.08), 0 24px 80px oklch(0% 0 0 / 0.5)",
-            }}
+            className="video-placeholder w-full aspect-video rounded-2xl flex items-center justify-center"
+            style={{ background: "oklch(14% 0.02 255 / 0.85)" }}
           >
             <div className="flex flex-col items-center gap-5">
               {/* Play button with halo */}
               <div className="relative flex items-center justify-center">
-                <div className="absolute size-20 rounded-full border border-primary/20" />
+                <div className="absolute size-20 rounded-full border border-primary/20 animate-pulse-ring" />
                 <div
-                  className="size-16 rounded-full flex items-center justify-center border border-white/10"
+                  className="size-16 rounded-full flex items-center justify-center border border-white/10 transition-transform duration-300 group-hover:scale-110"
                   style={{ background: "oklch(60% 0.28 285 / 0.12)" }}
                 >
                   <Play className="size-6 text-primary fill-primary ml-0.5" />
@@ -144,11 +145,13 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section className="px-4 pb-20">
-        <p className="mb-8 text-xl font-semibold uppercase tracking-widest text-muted-foreground text-center">
-          Why use Setora
-        </p>
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-5">
+      <section className="px-4 pt-20 pb-20">
+        <div className="max-w-6xl mx-auto">
+        <h2 className="mb-12 text-5xl md:text-6xl font-bold tracking-tight text-foreground">
+          <span className="block mb-4">Private-lesson quality.</span>
+          <span className="text-primary">Self-taught freedom.</span>
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {features.map((f) => (
             <Card key={f.title} className="flex flex-col gap-4">
               <span className="text-3xl text-primary leading-none">
@@ -162,6 +165,7 @@ export default function LandingPage() {
               </p>
             </Card>
           ))}
+        </div>
         </div>
       </section>
 

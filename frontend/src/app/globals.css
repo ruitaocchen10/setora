@@ -40,3 +40,19 @@ a, button, [role="button"], [type="button"], [type="submit"] {
   0%   { background-position: -200% center; }
   100% { background-position:  200% center; }
 }
+
+.video-placeholder {
+  box-shadow: 0 0 0 1px oklch(100% 0 0 / 0.08), 0 24px 80px oklch(0% 0 0 / 0.5);
+  transition: box-shadow 0.4s ease;
+}
+.video-placeholder:hover {
+  box-shadow: 0 0 0 1px oklch(100% 0 0 / 0.22), 0 24px 80px oklch(0% 0 0 / 0.5), 0 0 60px oklch(60% 0.28 285 / 0.22);
+}
+
+@keyframes pulse-ring {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50%       { opacity: 0.55; transform: scale(1.12); }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 2.5s ease-in-out infinite;
+}
