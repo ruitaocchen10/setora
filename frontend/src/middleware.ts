@@ -21,7 +21,13 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // token refresh failed (e.g. stale session) — treat as logged out
+  }
 
   const { pathname } = request.nextUrl;
   const isProtected = pathname.startsWith("/app") || pathname.startsWith("/projects");
