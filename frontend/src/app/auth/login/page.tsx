@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -87,9 +88,10 @@ export default function LoginPage() {
         ) : (
           <>
             {/* Wordmark */}
-            <p className="text-primary text-sm font-semibold tracking-tight mb-6">
-              setora
-            </p>
+            <div className="flex items-center gap-2 mb-6">
+              <Image src="/logo-violet-transparent.png" alt="Setora logo" width={602} height={602} className="size-6 -translate-y-0.5" />
+              <span className="text-xl font-extrabold tracking-tight text-primary">Setora</span>
+            </div>
 
             {/* Heading */}
             <h1 className="text-xl font-bold text-foreground">

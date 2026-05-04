@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -44,9 +45,10 @@ export default function ResetPasswordPage() {
       </div>
 
       <div className="relative w-full max-w-sm bg-surface border border-border rounded-lg p-8">
-        <p className="text-primary text-sm font-semibold tracking-tight mb-6">
-          setora
-        </p>
+        <div className="flex items-center gap-2 mb-6">
+          <Image src="/logo-violet-transparent.png" alt="Setora logo" width={602} height={602} className="size-6 -translate-y-0.5" />
+          <span className="text-xl font-extrabold tracking-tight text-primary">Setora</span>
+        </div>
         <h1 className="text-xl font-bold text-foreground">Choose a new password</h1>
         <p className="text-sm text-muted-foreground mt-1 mb-6">
           Pick something strong you haven&apos;t used before.

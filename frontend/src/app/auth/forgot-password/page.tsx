@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -66,9 +67,10 @@ export default function ForgotPasswordPage() {
           </div>
         ) : (
           <>
-            <p className="text-primary text-sm font-semibold tracking-tight mb-6">
-              setora
-            </p>
+            <div className="flex items-center gap-2 mb-6">
+              <Image src="/logo-violet-transparent.png" alt="Setora logo" width={602} height={602} className="size-6 -translate-y-0.5" />
+              <span className="text-xl font-extrabold tracking-tight text-primary">Setora</span>
+            </div>
             <h1 className="text-xl font-bold text-foreground">Reset your password</h1>
             <p className="text-sm text-muted-foreground mt-1 mb-6">
               Enter your email and we&apos;ll send you a reset link.
