@@ -145,27 +145,27 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section className="px-4 pt-20 pb-20">
+      <section className="px-4 pt-20 pb-40">
         <div className="max-w-6xl mx-auto">
-        <h2 className="mb-12 text-5xl md:text-6xl font-bold tracking-tight text-foreground">
-          <span className="block mb-4">Private-lesson quality.</span>
-          <span className="text-primary">Self-taught freedom.</span>
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {features.map((f) => (
-            <Card key={f.title} className="flex flex-col gap-4">
-              <span className="text-3xl text-primary leading-none">
-                {f.glyph}
-              </span>
-              <h3 className="text-xl font-semibold text-foreground">
-                {f.title}
-              </h3>
-              <p className="text-base text-muted-foreground leading-relaxed">
-                {f.body}
-              </p>
-            </Card>
-          ))}
-        </div>
+          <h2 className="mb-20 text-5xl md:text-6xl font-bold tracking-tight text-foreground">
+            <span className="block mb-4">Private-lesson quality.</span>
+            <span className="text-primary">Self-taught freedom.</span>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {features.map((f) => (
+              <Card key={f.title} className="flex flex-col gap-4">
+                <span className="text-3xl text-primary leading-none">
+                  {f.glyph}
+                </span>
+                <h3 className="text-xl font-semibold text-foreground">
+                  {f.title}
+                </h3>
+                <p className="text-base text-muted-foreground leading-relaxed">
+                  {f.body}
+                </p>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 

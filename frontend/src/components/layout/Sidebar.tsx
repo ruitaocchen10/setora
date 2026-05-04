@@ -53,10 +53,18 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
       } m-3 flex flex-col bg-surface rounded-xl border border-border transition-all duration-200 ease-in-out shrink-0`}
     >
       {/* Top: Logo + toggle */}
-      <div className={`flex items-center py-5 px-4 ${collapsed ? "justify-center" : "justify-between"}`}>
+      <div
+        className={`flex items-center py-5 px-4 ${collapsed ? "justify-center" : "justify-between"}`}
+      >
         {!collapsed && (
           <div className="flex items-center gap-2">
-            <Image src="/logo.png" alt="" width={602} height={602} className="size-6" />
+            <Image
+              src="/logo.png"
+              alt=""
+              width={602}
+              height={602}
+              className="size-6 -translate-y-0.5"
+            />
             <span className="text-lg font-semibold text-foreground tracking-tight">
               Setora
             </span>
@@ -98,7 +106,9 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
               ) : (
                 <>
                   <Icon className="size-4 shrink-0" />
-                  <span className="text-sm font-medium whitespace-nowrap">{label}</span>
+                  <span className="text-sm font-medium whitespace-nowrap">
+                    {label}
+                  </span>
                 </>
               )}
             </Link>
@@ -118,7 +128,13 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
             <Link
               key={project.id}
               href={`/projects/${project.id}`}
-              title={collapsed ? (project.artist ? `${project.title} — ${project.artist}` : project.title) : undefined}
+              title={
+                collapsed
+                  ? project.artist
+                    ? `${project.title} — ${project.artist}`
+                    : project.title
+                  : undefined
+              }
               className={`flex items-center py-2 mx-2 rounded-full transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-white/5
                 ${collapsed ? "justify-center px-3" : "px-3"}
               `}
@@ -129,7 +145,10 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
                 <span className="text-sm whitespace-nowrap overflow-hidden text-ellipsis">
                   {project.title}
                   {project.artist && (
-                    <span className="text-muted-foreground/60"> — {project.artist}</span>
+                    <span className="text-muted-foreground/60">
+                      {" "}
+                      — {project.artist}
+                    </span>
                   )}
                 </span>
               )}
@@ -140,9 +159,7 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
 
       {/* Bottom: User info */}
       <div
-        className={`p-4 flex items-center gap-3 ${
-          collapsed ? "flex-col" : ""
-        }`}
+        className={`p-4 flex items-center gap-3 ${collapsed ? "flex-col" : ""}`}
       >
         <div className="size-8 rounded-full bg-primary/20 text-primary flex items-center justify-center text-sm font-semibold shrink-0">
           {initials}
