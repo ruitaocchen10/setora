@@ -50,22 +50,22 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
     <aside
       className={`${
         collapsed ? "w-16" : "w-60"
-      } m-3 flex flex-col bg-surface rounded-xl border border-border transition-all duration-200 ease-in-out shrink-0`}
+      } m-4 flex flex-col bg-surface rounded-xl border border-border transition-all duration-200 ease-in-out shrink-0`}
     >
       {/* Top: Logo + toggle */}
       <div
-        className={`flex items-center py-5 px-4 ${collapsed ? "justify-center" : "justify-between"}`}
+        className={`flex items-center py-4 px-4 ${collapsed ? "justify-center" : "justify-between"}`}
       >
         {!collapsed && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <Image
               src="/logo.png"
               alt=""
               width={602}
               height={602}
-              className="size-6 -translate-y-0.5"
+              className="size-4 -translate-y-0.5"
             />
-            <span className="text-lg font-semibold text-foreground tracking-tight">
+            <span className="text-md font-semibold text-foreground tracking-tight">
               Setora
             </span>
           </div>
@@ -84,7 +84,7 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
       </div>
 
       {/* Nav links */}
-      <nav className="py-3 overflow-hidden">
+      <nav className="py-1 overflow-hidden">
         {navItems.map(({ label, icon: Icon, href }) => {
           const isActive = pathname === href;
           return (
@@ -92,7 +92,7 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
               key={href}
               href={href}
               title={collapsed ? label : undefined}
-              className={`flex items-center py-2.5 mx-2 rounded-full transition-colors cursor-pointer
+              className={`flex items-center py-2 mx-2 rounded-md transition-colors cursor-pointer
                 ${collapsed ? "justify-center px-3" : "gap-3 px-3"}
                 ${
                   isActive
@@ -102,7 +102,7 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
               `}
             >
               {collapsed ? (
-                <Icon className="size-5" />
+                <Icon className="size-4" />
               ) : (
                 <>
                   <Icon className="size-4 shrink-0" />
@@ -117,13 +117,13 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
       </nav>
 
       {/* Recents */}
-      <div className="flex-1 overflow-hidden">
+      <div className="pt-8 flex-1 overflow-hidden">
         {!collapsed && (
-          <p className="px-5 pt-4 pb-1 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            Recent
+          <p className="px-5 pb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Recents
           </p>
         )}
-        <div className="py-1">
+        <div>
           {recentProjects.map((project) => (
             <Link
               key={project.id}
@@ -135,14 +135,14 @@ export function Sidebar({ user, recentProjects }: SidebarProps) {
                     : project.title
                   : undefined
               }
-              className={`flex items-center py-2 mx-2 rounded-full transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-white/5
+              className={`flex items-center py-2 mx-2 rounded-md transition-colors cursor-pointer text-muted-foreground hover:text-foreground hover:bg-white/5
                 ${collapsed ? "justify-center px-3" : "px-3"}
               `}
             >
               {collapsed ? (
                 <span className="size-1.5 rounded-full bg-muted-foreground/50 shrink-0" />
               ) : (
-                <span className="text-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                <span className="min-w-0 truncate text-sm">
                   {project.title}
                   {project.artist && (
                     <span className="text-muted-foreground/60">

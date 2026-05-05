@@ -77,7 +77,7 @@ export default async function Home() {
         ) : (
         <section>
           <p className="mb-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Recent Sessions
+            Recent Projects
           </p>
           <div className="grid grid-cols-4 gap-4">
             {projects.map((project) => {

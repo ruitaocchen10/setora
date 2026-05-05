@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { ChevronDown, ChevronUp, Paperclip } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 interface InstructionsPanelProps {
@@ -31,10 +31,7 @@ export function InstructionsPanel({ projectId, initialInstructions }: Instructio
         className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-foreground hover:text-foreground/80 transition-colors cursor-pointer"
       >
         <span>Instructions</span>
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <Paperclip className="size-4" />
-          {open ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
-        </div>
+        {open ? <ChevronUp className="size-4 text-muted-foreground" /> : <ChevronDown className="size-4 text-muted-foreground" />}
       </button>
       <div
         className="grid transition-all duration-200 ease-in-out"

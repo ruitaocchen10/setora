@@ -23,7 +23,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
   const [goals, setGoals] = useState(profile.goals.join("\n"));
   const [profileMd, setProfileMd] = useState(profile.profile_md ?? "");
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ text: string; ok: boolean } | null>(null);
 
   function toggleInstrument(instrument: string) {
     setInstruments((prev) =>
@@ -51,7 +51,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       .eq("id", profile.id);
 
     setSaving(false);
-    setMessage(error ? "Failed to save." : "Saved.");
+    setMessage(error ? { text: "Failed to save.", ok: false } : { text: "Saved.", ok: true });
   }
 
   return (
@@ -155,7 +155,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
           {saving ? "Saving…" : "Save"}
         </button>
         {message && (
-          <p className="text-sm text-muted-foreground">{message}</p>
+          <p className={`text-sm ${message.ok ? "text-accent" : "text-destructive"}`}>{message.text}</p>
         )}
       </div>
     </div>

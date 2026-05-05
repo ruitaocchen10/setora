@@ -98,6 +98,18 @@ function AssistantMessage({ message }: { message: Message }) {
     );
   }
 
+  if (!message.content) {
+    return (
+      <div className="max-w-[75%] rounded-2xl rounded-tl-sm bg-surface border border-border px-4 py-3">
+        <span className="flex gap-1 items-center">
+          <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:0ms]" />
+          <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:150ms]" />
+          <span className="size-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:300ms]" />
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-[75%] rounded-2xl rounded-tl-sm bg-surface border border-border px-4 py-2.5">
       <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
@@ -230,8 +242,8 @@ export function SessionChat({
           <ChevronLeft className="size-4" />
           {projectTitle}
         </Link>
-        <p className="text-xs text-muted-foreground">
-          Session · {formatDate(sessionDate)}
+        <p className="text-sm font-medium text-foreground">
+          {formatDate(sessionDate)}
         </p>
       </div>
 

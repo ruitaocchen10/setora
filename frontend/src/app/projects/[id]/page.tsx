@@ -43,12 +43,15 @@ export default async function ProjectPage({
           <div className="flex-1 overflow-y-auto p-8">
             {/* Project header */}
             <div className="mb-8">
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-start justify-between mb-1">
                 <h1 className="text-3xl font-semibold text-foreground">
                   {project.title}
                 </h1>
                 <ProjectMenu projectId={project.id} />
               </div>
+              {project.artist && (
+                <p className="text-base text-muted-foreground mb-3">{project.artist}</p>
+              )}
               <div className="flex gap-1.5 flex-wrap">
                 {project.instruments.map((inst: string) => (
                   <span
@@ -69,7 +72,7 @@ export default async function ProjectPage({
           </div>
 
           {/* Right panel */}
-          <div className="w-108 shrink-0 overflow-y-auto p-12 flex flex-col gap-8">
+          <div className="w-108 shrink-0 overflow-y-auto p-8 flex flex-col gap-8">
             <InstructionsPanel
               projectId={project.id}
               initialInstructions={project.instructions}

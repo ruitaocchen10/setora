@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Plus, Music, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Music, X } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { ReferenceTrack } from "@/lib/types";
 
@@ -34,10 +34,7 @@ export function ReferenceTracksPanel({ projectId: _projectId, initialTracks }: R
         className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-foreground hover:text-foreground/80 transition-colors cursor-pointer"
       >
         <span>Reference Tracks</span>
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <Plus className="size-4" />
-          {open ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
-        </div>
+        {open ? <ChevronUp className="size-4 text-muted-foreground" /> : <ChevronDown className="size-4 text-muted-foreground" />}
       </button>
       <div
         className="grid transition-all duration-200 ease-in-out"
