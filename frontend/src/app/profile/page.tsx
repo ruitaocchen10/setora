@@ -15,11 +15,8 @@ export default async function ProfilePage() {
   return (
     <div className="flex h-screen bg-background text-foreground">
       <UserSidebar />
-      <main className="flex-1 overflow-y-auto p-10">
-        <div className="max-w-lg">
-          <h1 className="text-3xl font-semibold text-foreground mb-8">Profile</h1>
-          <ProfileForm profile={data as Profile} />
-        </div>
+      <main className="flex-1 overflow-y-auto px-10 pt-16 pb-10">
+        <ProfileForm profile={data as Profile} />
       </main>
     </div>
   );

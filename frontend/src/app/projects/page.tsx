@@ -21,7 +21,7 @@ export default async function Projects() {
     <div className="flex h-screen bg-background text-foreground">
       <UserSidebar />
 
-      <main className="flex flex-col flex-1 overflow-y-auto p-10">
+      <main className="flex flex-col flex-1 overflow-y-auto px-10 pt-16 pb-10">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-semibold text-foreground">Projects</h1>
           <NewProjectButton variant="button" />
