@@ -18,13 +18,13 @@ export default async function ProjectPage({
 
   const { data: project } = await supabase
     .from("projects")
-    .select("*, sessions(id, created_at), reference_tracks(id, song_name, artist, source_url)")
+    .select("*, sessions(id, name, created_at), reference_tracks(id, song_name, artist, source_url)")
     .eq("id", id)
     .single();
 
   if (!project) notFound();
 
-  const sessions = (project.sessions ?? []) as { id: string; created_at: string }[];
+  const sessions = (project.sessions ?? []) as { id: string; name: string | null; created_at: string }[];
   const referenceTracks = (project.reference_tracks ?? []) as {
     id: string;
     song_name: string | null;

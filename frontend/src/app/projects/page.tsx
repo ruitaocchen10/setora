@@ -1,5 +1,6 @@
 import { UserSidebar } from "@/components/layout/UserSidebar";
 import { ProjectsGrid } from "@/components/project/ProjectsGrid";
+import { NewProjectButton } from "@/components/project/NewProjectButton";
 import { createSupabaseSessionClient } from "@/lib/supabase/server";
 
 export default async function Projects() {
@@ -21,8 +22,9 @@ export default async function Projects() {
       <UserSidebar />
 
       <main className="flex flex-col flex-1 overflow-y-auto p-10">
-        <div className="mb-8">
+        <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-semibold text-foreground">Projects</h1>
+          <NewProjectButton variant="button" />
         </div>
         <ProjectsGrid projects={projects} />
       </main>
