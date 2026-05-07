@@ -21,7 +21,8 @@ def build_system_prompt(req: ChatRequest) -> str:
     if project.instructions:
         lines.append(f"Teacher notes: {project.instructions}")
     if profile.skill_level:
-        lines.append(f"Student level: {profile.skill_level}")
+        traits = profile.skill_level if isinstance(profile.skill_level, list) else [profile.skill_level]
+        lines.append(f"Student abilities: {', '.join(traits)}")
     if profile.goals:
         goals_str = ", ".join(profile.goals) if isinstance(profile.goals, list) else profile.goals
         lines.append(f"Goals: {goals_str}")

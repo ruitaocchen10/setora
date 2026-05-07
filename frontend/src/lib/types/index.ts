@@ -1,4 +1,3 @@
-export type SkillLevel = "beginner" | "intermediate" | "competent" | "advanced";
 export type ExtractionStatus = "pending" | "processing" | "ready" | "failed";
 export type RecordingStatus = "pending" | "processing" | "ready" | "failed";
 export type MessageRole = "user" | "assistant";
@@ -6,7 +5,7 @@ export type MessageRole = "user" | "assistant";
 export interface Profile {
   id: string;
   full_name: string | null;
-  skill_level: SkillLevel | null;
+  skill_level: string[];
   instruments: string[];
   goals: string[];
   profile_md: string | null;

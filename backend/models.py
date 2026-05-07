@@ -11,7 +11,7 @@ class Project(BaseModel):
     instructions: str | None = None
 
 class UserProfile(BaseModel):
-    skill_level: str | None = None
+    skill_level: list[str] | None = None
     goals: list[str] | str | None = None
     profile_md: str | None = None
 

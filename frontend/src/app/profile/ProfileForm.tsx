@@ -3,15 +3,31 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { Profile, SkillLevel } from "@/lib/types";
+import { Profile } from "@/lib/types";
+
+const ABILITY_TRAITS = [
+  "I can read sheet music",
+  "I can play / sing by ear",
+  "I can improvise",
+  "I've performed for an audience",
+  "I practice with a metronome",
+  "I've had formal lessons",
+  "I can play in multiple keys",
+  "I record and listen back to myself",
+] as const;
+
+const PREDEFINED_GOALS = [
+  "Improve tone consistency",
+  "Build technical speed",
+  "Nail a specific section",
+  "Perform with confidence",
+  "Improve timing and rhythm",
+  "Expand my repertoire",
+  "Learn music theory",
+  "Develop expression and dynamics",
+] as const;
 
 const INSTRUMENTS = ["voice", "guitar", "piano"] as const;
-const SKILL_LEVELS: { value: SkillLevel; label: string }[] = [
-  { value: "beginner", label: "Beginner" },
-  { value: "intermediate", label: "Intermediate" },
-  { value: "competent", label: "Competent" },
-  { value: "advanced", label: "Advanced" },
-];
 
 // ── Edit Modal ────────────────────────────────────────────────────────────────
 
@@ -23,13 +39,23 @@ interface EditModalProps {
 
 function EditModal({ profile, onSave, onClose }: EditModalProps) {
   const [fullName, setFullName] = useState(profile.full_name ?? "");
-  const [skillLevel, setSkillLevel] = useState<SkillLevel | "">(
-    profile.skill_level ?? "",
-  );
+  const [abilities, setAbilities] = useState<string[]>(profile.skill_level);
   const [instruments, setInstruments] = useState<string[]>(profile.instruments);
-  const [goals, setGoals] = useState(profile.goals.join("\n"));
+  const [selectedGoals, setSelectedGoals] = useState<string[]>(
+    profile.goals.filter((g) => (PREDEFINED_GOALS as readonly string[]).includes(g)),
+  );
+  const [customGoals, setCustomGoals] = useState<string[]>(
+    profile.goals.filter((g) => !(PREDEFINED_GOALS as readonly string[]).includes(g)),
+  );
+  const [customGoalInput, setCustomGoalInput] = useState("");
   const [profileMd, setProfileMd] = useState(profile.profile_md ?? "");
   const [saving, setSaving] = useState(false);
+
+  function toggleAbility(trait: string) {
+    setAbilities((prev) =>
+      prev.includes(trait) ? prev.filter((t) => t !== trait) : [...prev, trait],
+    );
+  }
 
   function toggleInstrument(inst: string) {
     setInstruments((prev) =>
@@ -37,18 +63,31 @@ function EditModal({ profile, onSave, onClose }: EditModalProps) {
     );
   }
 
+  function toggleGoal(goal: string) {
+    setSelectedGoals((prev) =>
+      prev.includes(goal) ? prev.filter((g) => g !== goal) : [...prev, goal],
+    );
+  }
+
+  function addCustomGoal() {
+    const trimmed = customGoalInput.trim();
+    if (!trimmed || customGoals.includes(trimmed) || selectedGoals.includes(trimmed)) return;
+    setCustomGoals((prev) => [...prev, trimmed]);
+    setCustomGoalInput("");
+  }
+
+  function removeCustomGoal(goal: string) {
+    setCustomGoals((prev) => prev.filter((g) => g !== goal));
+  }
+
   async function handleSave() {
     setSaving(true);
     const supabase = createSupabaseBrowserClient();
-    const goalsArr = goals
-      .split("\n")
-      .map((g) => g.trim())
-      .filter(Boolean);
     const updates = {
       full_name: fullName || null,
-      skill_level: skillLevel || null,
+      skill_level: abilities,
       instruments,
-      goals: goalsArr,
+      goals: [...selectedGoals, ...customGoals],
       profile_md: profileMd || null,
       updated_at: new Date().toISOString(),
     };
@@ -57,10 +96,15 @@ function EditModal({ profile, onSave, onClose }: EditModalProps) {
     onSave({
       ...updates,
       full_name: updates.full_name ?? null,
-      skill_level: (updates.skill_level as SkillLevel) ?? null,
     });
     onClose();
   }
+
+  const pillBase =
+    "rounded-full px-3 py-1 text-sm font-medium transition-colors cursor-pointer";
+  const pillActive = "bg-primary text-primary-foreground";
+  const pillInactive =
+    "bg-surface border border-border text-muted-foreground hover:text-foreground hover:bg-white/5";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -90,23 +134,19 @@ function EditModal({ profile, onSave, onClose }: EditModalProps) {
           />
         </div>
 
-        {/* Skill level */}
+        {/* Ability traits */}
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Skill level
+            About you — choose all that apply
           </label>
           <div className="flex gap-2 flex-wrap">
-            {SKILL_LEVELS.map(({ value, label }) => (
+            {ABILITY_TRAITS.map((trait) => (
               <button
-                key={value}
-                onClick={() => setSkillLevel(skillLevel === value ? "" : value)}
-                className={`rounded-full px-3 py-1 text-sm font-medium transition-colors cursor-pointer ${
-                  skillLevel === value
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-surface border border-border text-muted-foreground hover:text-foreground hover:bg-white/5"
-                }`}
+                key={trait}
+                onClick={() => toggleAbility(trait)}
+                className={`${pillBase} ${abilities.includes(trait) ? pillActive : pillInactive}`}
               >
-                {label}
+                {trait}
               </button>
             ))}
           </div>
@@ -122,11 +162,7 @@ function EditModal({ profile, onSave, onClose }: EditModalProps) {
               <button
                 key={inst}
                 onClick={() => toggleInstrument(inst)}
-                className={`rounded-full px-3 py-1 text-sm font-medium capitalize transition-colors cursor-pointer ${
-                  instruments.includes(inst)
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-surface border border-border text-muted-foreground hover:text-foreground hover:bg-white/5"
-                }`}
+                className={`${pillBase} capitalize ${instruments.includes(inst) ? pillActive : pillInactive}`}
               >
                 {inst}
               </button>
@@ -135,18 +171,55 @@ function EditModal({ profile, onSave, onClose }: EditModalProps) {
         </div>
 
         {/* Goals */}
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-2">
           <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Goals
           </label>
-          <p className="text-xs text-muted-foreground">One goal per line</p>
-          <textarea
-            rows={4}
-            value={goals}
-            onChange={(e) => setGoals(e.target.value)}
-            placeholder={"Improve tone consistency\nNail the bridge section"}
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none"
-          />
+          <div className="flex gap-2 flex-wrap">
+            {PREDEFINED_GOALS.map((goal) => (
+              <button
+                key={goal}
+                onClick={() => toggleGoal(goal)}
+                className={`${pillBase} ${selectedGoals.includes(goal) ? pillActive : pillInactive}`}
+              >
+                {goal}
+              </button>
+            ))}
+          </div>
+          {customGoals.length > 0 && (
+            <div className="flex gap-2 flex-wrap">
+              {customGoals.map((goal) => (
+                <span
+                  key={goal}
+                  className="flex items-center gap-1 rounded-full bg-primary/15 px-3 py-1 text-sm text-primary"
+                >
+                  {goal}
+                  <button
+                    onClick={() => removeCustomGoal(goal)}
+                    className="cursor-pointer hover:opacity-70 transition-opacity"
+                  >
+                    <X className="size-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+          <div className="flex gap-2">
+            <input
+              value={customGoalInput}
+              onChange={(e) => setCustomGoalInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addCustomGoal()}
+              placeholder="Add a custom goal…"
+              className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+            <button
+              onClick={addCustomGoal}
+              disabled={!customGoalInput.trim()}
+              className="rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-default"
+            >
+              Add
+            </button>
+          </div>
         </div>
 
         {/* Notes for AI */}
@@ -219,10 +292,6 @@ export default function ProfileForm({
         .toUpperCase()
     : "?";
 
-  const skillLabel = SKILL_LEVELS.find(
-    (s) => s.value === profile.skill_level,
-  )?.label;
-
   function handleSave(updated: Partial<Profile>) {
     setProfile((prev) => ({ ...prev, ...updated }));
   }
@@ -256,11 +325,6 @@ export default function ProfileForm({
             <p className="text-lg font-semibold text-foreground">
               {profile.full_name ?? "—"}
             </p>
-            {skillLabel && (
-              <span className="mt-2 inline-block rounded-full bg-primary/10 px-2.5 py-0.5 text-xs text-primary">
-                {skillLabel}
-              </span>
-            )}
           </div>
         </div>
 
@@ -270,9 +334,22 @@ export default function ProfileForm({
 
           <div className="grid grid-cols-2 gap-x-8 gap-y-6">
             <DetailRow
-              label="Skill level"
+              label="Abilities"
               value={
-                skillLabel ?? <span className="text-muted-foreground">—</span>
+                profile.skill_level.length > 0 ? (
+                  <div className="flex flex-wrap gap-1.5">
+                    {profile.skill_level.map((trait) => (
+                      <span
+                        key={trait}
+                        className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary"
+                      >
+                        {trait}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <span className="text-muted-foreground">—</span>
+                )
               }
             />
             <DetailRow
